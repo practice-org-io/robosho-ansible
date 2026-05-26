@@ -25,4 +25,13 @@
       state: directory
 
   - name: download catalogue
-    
+    ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
+      dest: /tmp/catalogue.zip
+
+  - name: unarchieve catalogue
+    ansible.builtin.unarchieve:
+      src: /tmp/catalogue.zip
+      dest: /app
+  
+  
