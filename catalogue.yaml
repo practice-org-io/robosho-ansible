@@ -30,9 +30,9 @@
       dest: /tmp/catalogue.zip
 
   - name: unarchieve catalogue
-    ansible.builtin.unarchieve:
+    ansible.builtin.unarchive:
       src: /tmp/catalogue.zip
       dest: /app
       remote_src: yes
-      
+
   
