@@ -1,5 +1,5 @@
 - name: configure shipping server
-  hosts: local
+  hosts: shipping
   become: yes
   tasks:
   - name: install maven and mysql
@@ -17,7 +17,7 @@
       home: /app
       shell: /sbin/nologin
       comment: "Roboshop system user"
-
+  
   - name: delete app directory
     ansible.builtin.file:
       path: /app
@@ -28,7 +28,7 @@
       path: /app
       state: directory
 
-  - name: download shipping
+  - name: delete shipping zip file
     ansible.builtin.file:
       path: /tmp/shipping.zip
       state: absent
@@ -43,13 +43,13 @@
       src: /tmp/shipping.zip
       dest: /app
       remote_src: yes
-
+  
   - name: install dependencies
     ansible.builtin.command: mvn clean package
-    args: 
+    args:
       chdir: /app
 
-  - name: install dependencies 
+  - name: install dependencies
     ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar 
     args:
       chdir: /app
@@ -71,7 +71,7 @@
     - cryptography
     - PyMySQL
 
-  - name: import shipping data 
+  - name: import shipping data
     community.mysql.mysql_db:
       state: import
       name: all
@@ -79,7 +79,7 @@
       login_user: root
       login_password: RoboShop@1
       target: "{{ item }}"
-    loop: 
+    loop:
     - /app/db/schema.sql
     - /app/db/app-user.sql 
     - /app/db/master-data.sql
