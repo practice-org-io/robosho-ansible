@@ -6,10 +6,10 @@
     ansible.builtin.dnf:
       name: "{{ item }}"
       state: present
-      loop: 
-      - python3 
-      - gcc 
-      - python3-devel
+    loop:
+    - python3 
+    - gcc 
+    - python3-devel
 
   - name: create system user roboshop
     ansible.builtin.user:
@@ -18,7 +18,7 @@
       home: /app
       shell: /sbin/nologin
       comment: "Roboshop system user"
-
+  
   - name: delete app directory
     ansible.builtin.file:
       path: /app
@@ -29,7 +29,7 @@
       path: /app
       state: directory
 
-  - name: download payment
+  - name: delete payment zip file
     ansible.builtin.file:
       path: /tmp/payment.zip
       state: absent
@@ -58,7 +58,7 @@
       dest: /etc/systemd/system/payment.service
 
   - name: daemon reload
-    ansible.builtin.service:
+    ansible.builtin.systemd_service:
       daemon_reload: true
 
   - name: start enable payment
