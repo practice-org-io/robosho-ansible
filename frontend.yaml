@@ -3,7 +3,7 @@
   become: yes
   tasks: 
   - name: enable nginx 1.24
-    ansible.builtin.command: dnf module enable nginx:1.24
+    ansible.builtin.command: dnf module enable nginx:1.24 -y
 
   - name: install nginx
     ansible.builtin.dnf:
@@ -22,11 +22,22 @@
 
   - name: download shipping
     ansible.builtin.get_url:
-      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
-      dest: /tmp/shipping.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip 
+      dest: /tmp/frontend.zip
 
   - name: unarchieve shipping
     ansible.builtin.unarchive:
-      src: /tmp/shipping.zip
-      dest: /app
-      remote_src: yes
+      src: /tmp/frontend.zip
+      dest: /usr/share/nginx/html 
+      remote_src: yes 
+
+  - name: copy nginx.conf
+    ansible.builtin.template:
+      src: nginx.conf 
+      path: /etc/nginx/nginx.conf
+
+  - name: restart nginx
+    ansible.builtin.service:
+      name: nginx
+      state: restarted
+      enabled: yes
